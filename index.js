@@ -22,7 +22,8 @@ http.createServer((req, res) => {
   
   // Self-ping to stay awake
   setInterval(() => {
-    http.get(appUrl, (res) => {
+    const protocol = appUrl.startsWith('https') ? require('https') : require('http');
+    protocol.get(appUrl, (res) => {
       console.log('Self-ping successful');
     }).on('error', (err) => {
       console.error('Self-ping failed:', err.message);
