@@ -42,7 +42,7 @@ const client = new Client({
 let connection;
 let player;
 
-client.on('clientReady', () => {
+client.on('ready', () => {
   console.log('Bot ready 🔥');
 });
 
