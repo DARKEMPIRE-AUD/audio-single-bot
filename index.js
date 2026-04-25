@@ -19,6 +19,12 @@ http.createServer((req, res) => {
   res.end('Bot is running');
 }).listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
+  console.log('Checking Token...');
+  if (process.env.TOKEN) {
+    console.log(`Token found! (Starts with: ${process.env.TOKEN.substring(0, 5)}...)`);
+  } else {
+    console.log('ERROR: TOKEN not found in Environment Variables!');
+  }
   
   // Self-ping to stay awake
   setInterval(() => {
