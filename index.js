@@ -114,5 +114,7 @@ client.on('messageCreate', message => {
 
 });
 
-console.log('Attempting to login to Discord...');
-client.login(process.env.TOKEN);
+console.log('Final check before login: Token is ' + (process.env.TOKEN ? 'Defined' : 'Undefined'));
+client.login(process.env.TOKEN)
+  .then(() => console.log('client.login() promise resolved!'))
+  .catch(err => console.error('client.login() failed with error:', err));
