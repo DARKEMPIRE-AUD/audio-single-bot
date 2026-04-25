@@ -114,4 +114,5 @@ client.on('messageCreate', message => {
 
 });
 
+console.log('Attempting to login to Discord...');
 client.login(process.env.TOKEN);
