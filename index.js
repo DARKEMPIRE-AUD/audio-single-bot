@@ -51,6 +51,15 @@ let player;
 
 client.on('ready', () => {
   console.log('Bot ready 🔥');
+  console.log(`Logged in as ${client.user.tag}`);
+});
+
+client.on('error', (error) => {
+  console.error('Discord Client Error:', error);
+});
+
+process.on('unhandledRejection', error => {
+  console.error('Unhandled promise rejection:', error);
 });
 
 client.on('messageCreate', message => {
