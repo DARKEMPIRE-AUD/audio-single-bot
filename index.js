@@ -49,13 +49,13 @@ client.on('messageCreate', message => {
   if (!commands.includes(message.content)) return;
 
   // Role check
-  const allowedRoles = ['admin', 'founder', 'officer'];
+  const allowedRoles = ['admin', 'founder', 'officer', 'dark'];
   const hasRole = message.member.roles.cache.some(role => 
     allowedRoles.includes(role.name.toLowerCase())
   );
 
   if (!hasRole) {
-    return message.reply('Unakku permission illa thambi! 🚫 (Admin/Founder/Officer roles only)').catch(console.error);
+    return message.reply('Unakku permission illa thambi! 🚫 (Admin/Founder/Officer/DARK roles only)').catch(console.error);
   }
 
   const vc = message.member.voice.channel;
