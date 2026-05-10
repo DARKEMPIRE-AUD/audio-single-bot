@@ -37,6 +37,10 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}`);
 });
 
+process.on('unhandledRejection', error => {
+  console.error('Unhandled promise rejection:', error);
+});
+
 client.on('messageCreate', message => {
   if (message.author.bot) return;
 
@@ -44,7 +48,7 @@ client.on('messageCreate', message => {
 
   // JOIN
   if (message.content === '!join1') {
-    if (!vc) return message.reply('Voice la join aagu bro');
+    if (!vc) return message.reply('Voice la join aagu bro').catch(console.error);
 
     connection = joinVoiceChannel({
       channelId: vc.id,
@@ -53,12 +57,12 @@ client.on('messageCreate', message => {
       selfDeaf: true
     });
 
-    return message.reply('Joined voice ✅');
+    return message.reply('Joined voice ✅').catch(console.error);
   }
 
   // PLAY
   if (message.content === '!st1') {
-    if (!connection) return message.reply('Mudhala !join1 podu');
+    if (!connection) return message.reply('Mudhala !join1 podu').catch(console.error);
 
     const resource = createAudioResource(path.join(__dirname, 'mega_loud.mp3'), {
       inlineVolume: true
@@ -68,7 +72,7 @@ client.on('messageCreate', message => {
     player.play(resource);
     connection.subscribe(player);
 
-    return message.reply('Audio start (MEGA LOUD) 🔊🌋');
+    return message.reply('Audio start (MEGA LOUD) 🔊🌋').catch(console.error);
   }
 
   // STOP
