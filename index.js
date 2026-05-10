@@ -1,41 +1,24 @@
+require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
 const { 
   joinVoiceChannel, 
   createAudioPlayer, 
   createAudioResource, 
-  AudioPlayerStatus
+  AudioPlayerStatus,
+  StreamType
 } = require('@discordjs/voice');
 
 const path = require('path');
 const http = require('http');
-require('ffmpeg-static');
+require('opusscript');
+require('libsodium-wrappers');
 
-// Health check and Keep-alive for Render
+// Health check
 const PORT = process.env.PORT || 8080;
-const appUrl = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
-
 http.createServer((req, res) => {
   res.writeHead(200);
-  res.end('Bot is running');
-}).listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-  console.log('Checking Token...');
-  if (process.env.TOKEN) {
-    console.log(`Token found! (Starts with: ${process.env.TOKEN.substring(0, 5)}...)`);
-  } else {
-    console.log('ERROR: TOKEN not found in Environment Variables!');
-  }
-  
-  // Self-ping to stay awake
-  setInterval(() => {
-    const protocol = appUrl.startsWith('https') ? require('https') : require('http');
-    protocol.get(appUrl, (res) => {
-      console.log('Self-ping successful');
-    }).on('error', (err) => {
-      console.error('Self-ping failed:', err.message);
-    });
-  }, 10 * 60 * 1000); // 10 minutes
-});
+  res.end('Single Bot is ready');
+}).listen(PORT);
 
 const client = new Client({
   intents: [
@@ -54,28 +37,20 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}`);
 });
 
-client.on('error', (error) => {
-  console.error('Discord Client Error:', error);
-});
-
-process.on('unhandledRejection', error => {
-  console.error('Unhandled promise rejection:', error);
-});
-
 client.on('messageCreate', message => {
-
   if (message.author.bot) return;
 
   const vc = message.member.voice.channel;
 
   // JOIN
   if (message.content === '!join1') {
-    if (!vc) return message.reply('Voice la join aagu');
+    if (!vc) return message.reply('Voice la join aagu bro');
 
     connection = joinVoiceChannel({
       channelId: vc.id,
       guildId: message.guild.id,
       adapterCreator: message.guild.voiceAdapterCreator,
+      selfDeaf: true
     });
 
     return message.reply('Joined voice ✅');
@@ -83,23 +58,17 @@ client.on('messageCreate', message => {
 
   // PLAY
   if (message.content === '!st1') {
+    if (!connection) return message.reply('Mudhala !join1 podu');
 
-    if (!connection) {
-      return message.reply('Mudhala !join1 podu');
-    }
-
-    const resource = createAudioResource(path.join(__dirname, 'new.mp3'));
-
-    player = createAudioPlayer();
-
-    player.on(AudioPlayerStatus.Playing, () => {
-      console.log('Audio started 🔊');
+    const resource = createAudioResource(path.join(__dirname, 'mega_loud.mp3'), {
+      inlineVolume: true
     });
 
+    player = createAudioPlayer();
     player.play(resource);
     connection.subscribe(player);
 
-    return message.reply('Audio start 🔊');
+    return message.reply('Audio start (MEGA LOUD) 🔊🌋');
   }
 
   // STOP
@@ -107,14 +76,12 @@ client.on('messageCreate', message => {
     if (player) player.stop();
   }
 
-  // DISCONNECT
+  // LEAVE
   if (message.content === '!ds1') {
     if (connection) connection.destroy();
   }
-
 });
 
-console.log('Final check before login: Token is ' + (process.env.TOKEN ? 'Defined' : 'Undefined'));
-client.login(process.env.TOKEN)
-  .then(() => console.log('client.login() promise resolved!'))
-  .catch(err => console.error('client.login() failed with error:', err));
+client.login(process.env.TOKEN || process.env.TOKEN1)
+  .then(() => console.log('Login successful!'))
+  .catch(err => console.error('Login failed:', err.message));
