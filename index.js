@@ -48,15 +48,7 @@ client.on('messageCreate', message => {
   const commands = ['!join1', '!st1', '!sp1', '!ds1'];
   if (!commands.includes(message.content)) return;
 
-  // Role check
-  const allowedRoles = ['admin', 'founder', 'officer', 'dark'];
-  const hasRole = message.member.roles.cache.some(role => 
-    allowedRoles.includes(role.name.toLowerCase())
-  );
-
-  if (!hasRole) {
-    return message.reply('Unakku permission illa thambi! 🚫 (Admin/Founder/Officer/DARK roles only)').catch(console.error);
-  }
+  // Role check removed - anyone can access
 
   const vc = message.member.voice.channel;
 
