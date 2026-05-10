@@ -43,6 +43,20 @@ process.on('unhandledRejection', error => {
 
 client.on('messageCreate', message => {
   if (message.author.bot) return;
+  if (!message.guild) return; // Ignore DMs
+
+  const commands = ['!join1', '!st1', '!sp1', '!ds1'];
+  if (!commands.includes(message.content)) return;
+
+  // Role check
+  const allowedRoles = ['admin', 'founder', 'officer'];
+  const hasRole = message.member.roles.cache.some(role => 
+    allowedRoles.includes(role.name.toLowerCase())
+  );
+
+  if (!hasRole) {
+    return message.reply('Unakku permission illa thambi! 🚫 (Admin/Founder/Officer roles only)').catch(console.error);
+  }
 
   const vc = message.member.voice.channel;
 
