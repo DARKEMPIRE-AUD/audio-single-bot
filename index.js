@@ -48,7 +48,10 @@ client.on('messageCreate', message => {
   const commands = ['!join1', '!st1', '!sp1', '!ds1'];
   if (!commands.includes(message.content)) return;
 
-  // Role check removed - anyone can access
+  // Role check: User must have at least one role other than @everyone
+  if (message.member.roles.cache.size <= 1) {
+    return message.reply('Unakku permission illa thambi! 🚫 (Yedhavadhu oru role venum)').catch(console.error);
+  }
 
   const vc = message.member.voice.channel;
 
