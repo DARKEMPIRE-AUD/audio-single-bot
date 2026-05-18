@@ -95,6 +95,6 @@ client.on('messageCreate', message => {
   }
 });
 
-client.login(process.env.TOKEN || process.env.TOKEN1)
+client.login(process.env.TOKEN || process.env.TOKEN1 || process.env.TOKENS)
   .then(() => console.log('Login successful!'))
   .catch(err => console.error('Login failed:', err.message));
